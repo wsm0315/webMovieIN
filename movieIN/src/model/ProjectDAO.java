@@ -18,7 +18,7 @@ public class ProjectDAO {
 		return conn;
 	}
 	
-	// sort로 입력 가능한 값 : "cnt desc"(작은거에서 큰거), "enddate", "writedate", "m_collected desc", "pna desc nulls last"
+	// sort로 입력 가능한 값 : "cnt desc"(큰거에서 작은거), "enddate", "writedate", "m_collected desc", "pna desc nulls last"
 	//						조회수 많은 순 			        마감임박          신작순		    모아진 돈 많은 순.	 		예상관객수
 	ArrayList<ProjectVO> listAll(String sorting) {
 		ArrayList<ProjectVO> projectList = null;
@@ -245,11 +245,13 @@ public class ProjectDAO {
 			st1.setInt(1, m_invest);
 			st1.setInt(2, seq_PID);
 			st1.executeUpdate();
+			result = true;
 		} catch (Exception e) {
 			System.out.println("insertPrice : " + e);
 		} finally {
 			try {
 				st.close();
+				st1.close();
 				conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -745,6 +747,185 @@ public class ProjectDAO {
 			try {
 				st.close();
 				conn.close(); 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	// 프로젝트정보(project DB)에 자료 올리기
+	boolean insertProject(ProjectVO vo) {
+		boolean result = false;
+		Connection conn = connectDB();
+		PreparedStatement st = null;
+		// vo에 있는 값을 DB의 insert 명령어를 통해 넣기.
+		try {
+			st = conn.prepareStatement("insert into project values(seq_PID.nextval,?,?,?,?,?,?,sysdate,?,?,?,?,0,?,0,?)");
+			st.setString(1, vo.getId());
+			st.setString(2, vo.getProj());
+			st.setInt(3, vo.getM_target());
+			st.setInt(4, vo.getM_collected());
+			st.setString(5, vo.getEnddate());
+			st.setInt(6, vo.getCnt());
+			st.setInt(7, vo.getM_min());
+			st.setInt(8, vo.getM_max());
+			st.setString(9, vo.getInv_type());
+			st.setInt(10, vo.getPna());
+			st.setString(11, vo.getPurpose());
+			st.setString(12, vo.getImgurl());
+			st.executeQuery();
+			result = true;
+		} catch (Exception e) {
+			System.out.println("insertProject : " + e);
+		} finally {
+			try {
+				st.close();
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	// 프로젝트에 inv_type 'R'일때, reward DB에 자료 올리기
+	boolean insertReward(ArrayList<RewardVO> list) {
+		boolean result = true;
+		Connection conn = connectDB();
+		PreparedStatement st = null;
+		PreparedStatement st1 = null;
+		try {
+			for (int i = 0; i < list.size(); ++i) {
+				st = conn.prepareStatement("insert into reward values(?, ?, ?)");
+				st.setInt(1, list.get(i).getSeq_PID());
+				st.setInt(2, list.get(i).getStd_invest());
+				st.setString(3, list.get(i).getReward());
+				st.executeUpdate();
+			}
+			st1 = conn.prepareStatement("update project set level_ = 1 where seq_PID = ?");
+			st1.setInt(1,list.get(0).getSeq_PID());
+			st1.executeUpdate();
+			result = true;
+		} catch (Exception e) {
+			System.out.println("insertReward : " + e);
+		} finally {
+			try {
+				st.close();
+				st1.close();
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	// 프로젝트에 inv_type 'I'일때, interest DB에 자료 올리기
+	boolean insertInterest(ArrayList<InterestVO> list) {
+		boolean result = true;
+		Connection conn = connectDB();
+		PreparedStatement st = null;
+		PreparedStatement st1 = null;
+		try {
+			for (int i = 0; i < list.size(); ++i) {
+				st = conn.prepareStatement("insert into interest values(?, ?, ?)");
+				st.setInt(1, list.get(i).getSeq_PID());
+				st.setInt(2, list.get(i).getAudience());
+				st.setInt(3, list.get(i).getInterest());
+				st.executeUpdate();
+			}
+			st1 = conn.prepareStatement("update project set level_ = 1 where seq_PID = ?");
+			st1.setInt(1,list.get(0).getSeq_PID());
+			st1.executeUpdate();
+			result = true;
+			result = true;
+		} catch (Exception e) {
+			System.out.println("insertInterest : " + e);
+		} finally {
+			try {
+				st.close();
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	// 영화정보(movie DB)에 자료 올리기
+	boolean insertMovie(MovieVO vo) {
+		boolean result = false;
+		Connection conn = connectDB();
+		PreparedStatement st = null;
+		PreparedStatement st1 = null;
+		// vo에 있는 값을 DB의 insert 명령어를 통해 넣기.
+		try {
+			st = conn.prepareStatement("insert into movie values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			st.setInt(1, vo.getSeq_PID());
+			st.setString(2, vo.getTitle());
+			st.setString(3, vo.getGenre1());
+			st.setString(4, vo.getGenre2());
+			st.setString(5, vo.getGenre3());
+			st.setString(6, vo.getDirector());
+			st.setString(7, vo.getActor1());
+			st.setString(8, vo.getActor2());
+			st.setString(9, vo.getActor3());
+			st.setString(10, vo.getActor4());
+			st.setString(11, vo.getProduction());
+			st.setString(12, vo.getDistributor());
+			st.setString(13, vo.getReleasedate());
+			st.setString(14, vo.getOrigin_title());
+			st.setString(15, vo.getImporter());
+			st.executeQuery();
+			st1 = conn.prepareStatement("update project set level_ = 2 where seq_PID = ?");
+			st1.setInt(1,vo.getSeq_PID());
+			st1.executeUpdate();
+			result = true;
+		} catch (Exception e) {
+			System.out.println("insertMovie : " + e);
+		} finally {
+			try {
+				st.close();
+				st1.close();
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	// 기업정보(company DB)에 자료 올리기
+	boolean insertCompany(CompanyVO vo) {
+		boolean result = false;
+		Connection conn = connectDB();
+		PreparedStatement st = null;
+		PreparedStatement st1 = null;
+		// vo에 있는 값을 DB의 insert 명령어를 통해 넣기.
+		try {
+			st = conn.prepareStatement("insert into company values(?,?,?,?,?,?,?,?,?,?,?)");
+			st.setInt(1, vo.getSeq_CID());
+			st.setInt(2, vo.getSeq_PID());
+			st.setString(3, vo.getId());
+			st.setString(4, vo.getC_name());
+			st.setString(5, vo.getC_location());
+			st.setString(6, vo.getC_date());
+			st.setString(7, vo.getC_eoname());
+			st.setInt(8, vo.getC_emp());
+			st.setString(9, vo.getC_crime());
+			st.setString(10, vo.getC_site());
+			st.setString(11, vo.getC_mail());
+			st.executeQuery();
+			st1 = conn.prepareStatement("update project set level_ = 3 and status = 1 where seq_PID = ?");
+			st1.setInt(1,vo.getSeq_PID());
+			st1.executeUpdate();
+			result = true;
+		} catch (Exception e) {
+			System.out.println("insertCompany : " + e);
+		} finally {
+			try {
+				st.close();
+				st1.close();
+				conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
