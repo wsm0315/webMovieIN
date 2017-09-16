@@ -29,7 +29,7 @@ public class ProjectDAO {
 			st = conn.createStatement();
 			// seq_PID(프로젝트 id), 사용자 id, 프로젝트명, imgurl명을 받음
 			// level_ 과 status가 3인 것만 받고 매개변수에 따라 정렬 기준을 달리하여 ArrayList에 순서대로 담아서 출력함.
-			rs = st.executeQuery("select seq_PID, id, proj, imgurl, inv_type, purpose from project where level_ = 3 and status = 3 order by " + sorting);
+			rs = st.executeQuery("select seq_PID, id, proj, imgurl, inv_type, purpose, to_char(enddate,'yyyy-mm-dd'), to_char(writedate, 'yyyy-mm-dd') from project where level_ = 3 and status = 3 order by " + sorting);
 			ProjectVO vo = null;
 			projectList = new ArrayList<ProjectVO>();
 			while (rs.next()) {
@@ -40,6 +40,8 @@ public class ProjectDAO {
 				vo.setImgurl(rs.getString(4));
 				vo.setInv_type(rs.getString(5));
 				vo.setPurpose(rs.getString(6));
+				vo.setEnddate(rs.getString(7));
+				vo.setWritedate(rs.getString(8));
 				projectList.add(vo);
 			}
 		} catch (Exception e) {
@@ -880,6 +882,7 @@ public class ProjectDAO {
 		} finally {
 			try {
 				st.close();
+				st1.close();
 				conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
