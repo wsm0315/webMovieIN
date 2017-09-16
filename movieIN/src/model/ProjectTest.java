@@ -12,10 +12,10 @@ public class ProjectTest {
 	public void test() {
 		ArrayList<FilterVO> list = null;
 		ProjectDAO dao = new ProjectDAO();
-		/*list = dao.listFilter("enddate");
+		list = dao.listFilter("enddate");
 		for (FilterVO vo: list) {
 			System.out.println(vo);
-		}*/
+		}
 		/*ArrayList<ProjectVO> searchList = dao.search("p");
 		for (ProjectVO vo: searchList) {
 			System.out.println(vo);

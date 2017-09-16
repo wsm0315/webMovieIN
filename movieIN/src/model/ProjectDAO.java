@@ -20,7 +20,7 @@ public class ProjectDAO {
 	
 	// sort로 입력 가능한 값 : "cnt desc"(큰거에서 작은거), "enddate", "writedate", "m_collected desc", "pna desc nulls last"
 	//						조회수 많은 순 			        마감임박          신작순		    모아진 돈 많은 순.	 		예상관객수
-	ArrayList<ProjectVO> listAll(String sorting) {
+	public ArrayList<ProjectVO> listAll(String sorting) {
 		ArrayList<ProjectVO> projectList = null;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -57,7 +57,7 @@ public class ProjectDAO {
 	}
 	
 	// FilterVO의 값을 가져옴. 프로젝트 둘러보기 시에 FilterVO의 값을 이용하여 프로젝트 list를 출력함.
-	ArrayList<FilterVO> listFilter(String sorting) {
+	public ArrayList<FilterVO> listFilter(String sorting) {
 		ArrayList<FilterVO> filterList = null;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -96,7 +96,7 @@ public class ProjectDAO {
 		return filterList;
 	}
 	// 검색기능 dao. 검색어를 입력하면 프로젝트 이름 중 그 keyword가 들어간 글자를 찾아줌.
-	ArrayList<ProjectVO> search(String keyword) {
+	public ArrayList<ProjectVO> search(String keyword) {
 		ArrayList<ProjectVO> projectList = null;
 		Connection conn = connectDB();
 		String query = "select seq_PID, id, proj, imgurl, inv_type, purpose from project where level_ = 3 and status = 3 and proj like '%" + keyword + "%'";
@@ -132,7 +132,7 @@ public class ProjectDAO {
 	}
 	
 	// project에 대한 상세 페이지에서 처음으로 나오는 위의 정보를 출력하기 위해 projectDB의 모든 정보를 담음.
-	ProjectVO listOneProject(int seq_PID) {
+	public ProjectVO listOneProject(int seq_PID) {
 		ProjectVO vo = null;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -174,7 +174,7 @@ public class ProjectDAO {
 	}
 	
 	// 메서드 종료 시점에서 찜한 프로젝트가 있을 경우 True, 없을 경우 False
-	boolean likeProjectChange(int seq_PID, String id) {
+	public boolean likeProjectChange(int seq_PID, String id) {
 		boolean result = false;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -203,7 +203,7 @@ public class ProjectDAO {
 	}
 	
 	// 찜한 프로젝트가 있는지 없는지만 확인함.
-	boolean likeProjectCheck(int seq_PID, String id) {
+	public boolean likeProjectCheck(int seq_PID, String id) {
 		boolean result = false;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -230,7 +230,7 @@ public class ProjectDAO {
 	
 	// boolean insertPrice(seq_PID, id, m_invest) 투자하기 누를 때 구현.
 	// price의 최소 최대값은 input 에서 min, max 속성? 같은 걸로?
-	boolean insertInvest(int seq_PID, String id, int m_invest) {
+	public boolean insertInvest(int seq_PID, String id, int m_invest) {
 		boolean result = false;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
@@ -261,7 +261,7 @@ public class ProjectDAO {
 	}
 	
 	// 전에 투자를 했었는지 확인하는 DAO
-	boolean investCheck(int seq_PID, String id) {
+	public boolean investCheck(int seq_PID, String id) {
 		boolean result = false;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -290,7 +290,7 @@ public class ProjectDAO {
 	}
 	
 	// CompanyVO companyInfo(seq_PID) - 기업정보 불러오기
-	CompanyVO companyInfo(int seq_PID) {
+	public CompanyVO companyInfo(int seq_PID) {
 		CompanyVO vo = null;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -327,7 +327,7 @@ public class ProjectDAO {
 	}
 	
 	// MovieVO movieInfo(seq_PID) - 영화정보 불러오기
-	MovieVO movieInfo(int seq_PID) {
+	public MovieVO movieInfo(int seq_PID) {
 		MovieVO vo = null;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -369,7 +369,7 @@ public class ProjectDAO {
 	
 	// ProjectVO에서 inv_type에 따라서
 	// ArrayList<InterestVO> interestInfo(seq_PID) or ArrayList<RewardVO> rewardInfo(seq_PID) 를 호출하여 정보를 얻음.
-	ArrayList<InterestVO> interestInfo(int seq_PID) {
+	public ArrayList<InterestVO> interestInfo(int seq_PID) {
 		ArrayList<InterestVO> list = null;
 		InterestVO vo = null;
 		Connection conn = connectDB();
@@ -400,7 +400,7 @@ public class ProjectDAO {
 		return list;
 	}
 	
-	ArrayList<RewardVO> rewardInfO(int seq_PID) {
+	public ArrayList<RewardVO> rewardInfO(int seq_PID) {
 		ArrayList<RewardVO> list = null;
 		RewardVO vo = null;
 		Connection conn = connectDB();
@@ -435,7 +435,7 @@ public class ProjectDAO {
 	// group이 높은 순서(새소식이 최근에 작성된 순서로 우선 정렬)
 	// 그 다음 depth 순서로 정리해서 댓글보다 작성글이 먼저 올 수 있게 정렬
 	// 그 다음 n_date 로 정렬해서 먼저 적은 댓글이 위로 올 수 있게 함.
-	ArrayList<NewsVO> listNews(int seq_PID) {
+	public ArrayList<NewsVO> listNews(int seq_PID) {
 		ArrayList<NewsVO> list = null;
 		NewsVO vo = null;
 		Connection conn = connectDB();
@@ -473,7 +473,7 @@ public class ProjectDAO {
 	}
 	
 	// boolean insertNewsReply(NewsVO vo) : 새소식에 댓글 달기
-	boolean insertNewsReply(NewsVO vo) {
+	public boolean insertNewsReply(NewsVO vo) {
 		boolean result = false;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
@@ -503,7 +503,7 @@ public class ProjectDAO {
 		return result;
 	}
 	
-	boolean deleteNewsReply(int seq_NNO) {
+	public boolean deleteNewsReply(int seq_NNO) {
 		boolean result = false;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -526,7 +526,7 @@ public class ProjectDAO {
 		return result;
 	}
 	
-	boolean updateNewsReply(NewsVO vo) {
+	public boolean updateNewsReply(NewsVO vo) {
 		boolean result = false;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
@@ -552,7 +552,7 @@ public class ProjectDAO {
 	}
 	
 	// 관리자 - 새소식 쓰기
-	boolean insertNews(NewsVO vo) {
+	public boolean insertNews(NewsVO vo) {
 		boolean result = false;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
@@ -585,7 +585,7 @@ public class ProjectDAO {
 	}
 	
 	// 관리자 - 새소식 삭제
-	boolean deleteNews(int seq_NNO) {
+	public boolean deleteNews(int seq_NNO) {
 		boolean result = false;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -609,7 +609,7 @@ public class ProjectDAO {
 	}
 	
 	// 관리자 - 새소식 수정
-	boolean updateNews(NewsVO vo) {
+	public boolean updateNews(NewsVO vo) {
 		boolean result = false;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
@@ -638,7 +638,7 @@ public class ProjectDAO {
 	}
 	
 	// 피드백 내용 보이기
-	ArrayList<FeedbackVO> listFeedback(int seq_PID) {
+	public ArrayList<FeedbackVO> listFeedback(int seq_PID) {
 		ArrayList<FeedbackVO> list = null;
 		FeedbackVO vo = null;
 		Connection conn = connectDB();
@@ -674,7 +674,7 @@ public class ProjectDAO {
 	}
 	
 	// 피드백 올리기
-	boolean insertFeedback(FeedbackVO vo) {
+	public boolean insertFeedback(FeedbackVO vo) {
 		boolean result = false;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
@@ -705,7 +705,7 @@ public class ProjectDAO {
 	}
 	
 	//피드백 삭제
-	boolean deleteFeedback(int seq_FNO) {
+	public boolean deleteFeedback(int seq_FNO) {
 		boolean result = false;
 		Connection conn = connectDB();
 		Statement st = null;
@@ -729,7 +729,7 @@ public class ProjectDAO {
 	}
 	
 	// feedback 수정
-	boolean updateFeedback(FeedbackVO vo) {
+	public boolean updateFeedback(FeedbackVO vo) {
 		boolean result = false;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
@@ -754,32 +754,68 @@ public class ProjectDAO {
 		return result;
 	}
 	
-	// 프로젝트정보(project DB)에 자료 올리기
-	boolean insertProject(ProjectVO vo) {
-		boolean result = false;
+	//프로젝트 진행중인지 확인
+	public ProjectVO checkProject(String id) {
+		ProjectVO vo = null;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement("select seq_PID, level_, inv_type from project where id = ? and status = 0");
+			st.setString(1, id);
+			rs = st.executeQuery();
+			if (rs.next()) {
+				vo = new ProjectVO();
+				vo.setSeq_PID(rs.getInt(1));
+				vo.setLevel_(rs.getInt(2));
+				vo.setInv_type(rs.getString(3));
+			}
+		} catch (Exception e) {
+			System.out.println("checkProject : " + e);
+		} finally {
+			try {
+				rs.close();
+				st.close();
+				conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return vo;
+	}
+	
+	// 프로젝트정보(project DB)에 자료 올리기
+	public int insertProject(ProjectVO vo) {
+		int result = -1;
+		Connection conn = connectDB();
+		PreparedStatement st = null;
+		PreparedStatement st1 = null;
+		ResultSet rs = null;
 		// vo에 있는 값을 DB의 insert 명령어를 통해 넣기.
 		try {
-			st = conn.prepareStatement("insert into project values(seq_PID.nextval,?,?,?,?,?,?,sysdate,?,?,?,?,0,?,0,?)");
+			st = conn.prepareStatement("insert into project values(seq_PID.nextval,?,?,?,0,?,0,sysdate,?,?,?,-1,0,?,0,?)");
 			st.setString(1, vo.getId());
 			st.setString(2, vo.getProj());
 			st.setInt(3, vo.getM_target());
-			st.setInt(4, vo.getM_collected());
-			st.setString(5, vo.getEnddate());
-			st.setInt(6, vo.getCnt());
-			st.setInt(7, vo.getM_min());
-			st.setInt(8, vo.getM_max());
-			st.setString(9, vo.getInv_type());
-			st.setInt(10, vo.getPna());
-			st.setString(11, vo.getPurpose());
-			st.setString(12, vo.getImgurl());
+			st.setString(4, vo.getEnddate());
+			st.setInt(5, vo.getM_min());
+			st.setInt(6, vo.getM_max());
+			st.setString(7, vo.getInv_type());
+			st.setString(8, vo.getPurpose());
+			st.setString(9, vo.getImgurl());
 			st.executeQuery();
-			result = true;
+			st1 = conn.prepareStatement("select seq_PID from project where proj = ?");
+			st1.setString(1, vo.getProj());
+			rs = st1.executeQuery();
+			if (rs.next()) {
+				result = rs.getInt(1);
+			}
 		} catch (Exception e) {
 			System.out.println("insertProject : " + e);
 		} finally {
 			try {
+				rs.close();
+				st1.close();
 				st.close();
 				conn.close();
 			} catch (Exception e) {
@@ -790,7 +826,7 @@ public class ProjectDAO {
 	}
 	
 	// 프로젝트에 inv_type 'R'일때, reward DB에 자료 올리기
-	boolean insertReward(ArrayList<RewardVO> list) {
+	public boolean insertReward(ArrayList<RewardVO> list) {
 		boolean result = true;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
@@ -821,7 +857,7 @@ public class ProjectDAO {
 		return result;
 	}
 	// 프로젝트에 inv_type 'I'일때, interest DB에 자료 올리기
-	boolean insertInterest(ArrayList<InterestVO> list) {
+	public boolean insertInterest(ArrayList<InterestVO> list) {
 		boolean result = true;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
@@ -852,7 +888,7 @@ public class ProjectDAO {
 		return result;
 	}
 	// 영화정보(movie DB)에 자료 올리기
-	boolean insertMovie(MovieVO vo) {
+	public boolean insertMovie(MovieVO vo) {
 		boolean result = false;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
@@ -876,7 +912,7 @@ public class ProjectDAO {
 			st.setString(14, vo.getOrigin_title());
 			st.setString(15, vo.getImporter());
 			st.executeQuery();
-			st1 = conn.prepareStatement("update project set level_ = 2 where seq_PID = ?");
+			st1 = conn.prepareStatement("update project set level_ = 3, status = 1 where seq_PID = ?");
 			st1.setInt(1,vo.getSeq_PID());
 			st1.executeUpdate();
 			result = true;
@@ -895,27 +931,26 @@ public class ProjectDAO {
 	}
 	
 	// 기업정보(company DB)에 자료 올리기
-	boolean insertCompany(CompanyVO vo) {
+	public boolean insertCompany(CompanyVO vo) {
 		boolean result = false;
 		Connection conn = connectDB();
 		PreparedStatement st = null;
 		PreparedStatement st1 = null;
 		// vo에 있는 값을 DB의 insert 명령어를 통해 넣기.
 		try {
-			st = conn.prepareStatement("insert into company values(?,?,?,?,?,?,?,?,?,?,?)");
-			st.setInt(1, vo.getSeq_CID());
-			st.setInt(2, vo.getSeq_PID());
-			st.setString(3, vo.getId());
-			st.setString(4, vo.getC_name());
-			st.setString(5, vo.getC_location());
-			st.setString(6, vo.getC_date());
-			st.setString(7, vo.getC_eoname());
-			st.setInt(8, vo.getC_emp());
-			st.setString(9, vo.getC_crime());
-			st.setString(10, vo.getC_site());
-			st.setString(11, vo.getC_mail());
+			st = conn.prepareStatement("insert into company values(seq_CID.nextval,?,?,?,?,?,?,?,?,?,?)");
+			st.setInt(1, vo.getSeq_PID());
+			st.setString(2, vo.getId());
+			st.setString(3, vo.getC_name());
+			st.setString(4, vo.getC_location());
+			st.setString(5, vo.getC_date());
+			st.setString(6, vo.getC_eoname());
+			st.setInt(7, vo.getC_emp());
+			st.setString(8, vo.getC_crime());
+			st.setString(9, vo.getC_site());
+			st.setString(10, vo.getC_mail());
 			st.executeQuery();
-			st1 = conn.prepareStatement("update project set level_ = 3 and status = 1 where seq_PID = ?");
+			st1 = conn.prepareStatement("update project set level_ = 2 where seq_PID = ?");
 			st1.setInt(1,vo.getSeq_PID());
 			st1.executeUpdate();
 			result = true;
@@ -932,4 +967,5 @@ public class ProjectDAO {
 		}
 		return result;
 	}
+	
 }
